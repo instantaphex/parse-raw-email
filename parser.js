@@ -1,24 +1,3 @@
-/* Code Summary:
-/* This is a simple email parser that takes a raw email and parses it into relevant fields.
-/* In it's current form, the email document class handles opening the file and then the parser
-/* splits it into header and body in splitDoc.  The header is passed along to parseHeader where
-/* the headers are parsed into a javascript object.  storeHeader grabs the overview values from
-/* the JavaScript object to store in the email document properties as well as grabs the MIME
-/* boundary (if it has one) so that the body parser can figure out where the fragments are located
-/*
-/* The body block is sent to parseBody where it is base64 decoded (if need be) and sent along to
-/* another more specific function depending on it's main type (text, multipart, etc...).
-/* 
-/* Multi part parsing is not complete and this implementation currently only stores raw MIME
-/* fragments in an array in the email document class.
-/* 
-/* Next Steps:
-/* 		1.)  Completely handle multi-part messages including images and attachments
-/*		2.)  Handle and decode all quoted-printable octets
-/*		3.)  Allow parser to handle multiple emails
-/* 		4.)  Allow export of email document in JSON
-/* 		5.)  break out classes into seperate modules
-
 /* Utility singleton */
 var utility = {
     regexes: {
