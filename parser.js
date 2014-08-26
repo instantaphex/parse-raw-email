@@ -7,19 +7,26 @@ function parseEmail(emailFile) {
 
     parser.message = new emailDocument();
     parser.message.loadFile(emailFile);
-    parser.splitDoc(parser.message);
 }
 
 parseEmail.prototype.splitDoc = function(data) {
     var parser = this;
+    var doc = [];
+    var bodyStart;
+
     /* find start of body */
-    var bodyStart = data.raw.substring(0).search(utility.regexes.doubleNewLine);
+    bodyStart = data.substring(0).search(utility.regexes.doubleNewLine);
     /* Grab Header Block */
-    data.headerBlock = data.raw.substring(0, bodyStart).trim();
+    doc[0] = data.substring(0, bodyStart);
     /* unfold long header fields */
-    data.headerBlock = data.headerBlock.replace(utility.regexes.fold, ' ');
+    doc[0] = doc[0].replace(utility.regexes.fold, ' ').trim();
     /* Grab Body block */
-    data.bodyBlock = data.raw.substring(bodyStart);
+    doc[1] = data.substring(bodyStart).trim();
+
+    return {
+    	header: doc[0],
+    	body: doc[1]
+    };
 }
 
 parseEmail.prototype.parseHeader = function(headerBlock) {
@@ -44,7 +51,7 @@ parseEmail.prototype.parseHeader = function(headerBlock) {
         /* build header object */
         result[arr[0].trim()] = arr[1].trim();
     });
-
+    console.log(result);
     parser.storeHeader(result);
 }
 
@@ -97,7 +104,9 @@ parseEmail.prototype.parseMultiPart = function(bodyBlock) {
     /* Grab each container from the body block */
     for (i = 0; i < indices.length - 1; i++) {
         console.log('Fragment ' + (i + 1).toString() + ' added.');
-        var theBlock = bodyBlock.substring(indices[0 + i] + parser.message.boundaries.length, indices[1 + i]).trim()
+        var theBlock = bodyBlock.substring(indices[0 + i] + parser.message.boundaries.length, indices[1 + i]).trim();
+        //var fragHead = 
+        //var fragBody = 
         parser.message.mimeFragments.push(theBlock);
     }
 }
@@ -136,13 +145,20 @@ parseEmail.prototype.storeHeader = function(headerObj) {
     parser.message.originatingIp = utility.extractIP(oip);
 }
 
+parseEmail.prototype.parseMimeFragment = function ( fragment ) {
+
+}
+
 parseEmail.prototype.parseMail = function(message) {
     var parser = this;
+    var doc;
 
-    parser.parseHeader(message.headerBlock);
-    parser.parseBody(message.bodyBlock);
+    doc = parser.splitDoc(message.raw);
+
+    parser.parseHeader(doc.header);
+    parser.parseBody(doc.body);
 }
 
 /* Simple Usage Example */
-var emailParser = new parseEmail('data');
+var emailParser = new parseEmail('data3');
 emailParser.parseMail(emailParser.message)

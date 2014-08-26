@@ -7,6 +7,7 @@ var utility = {
         fold: /\r\n|\r|\n(?:[ \t]+)/g,
         email: /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g,
         ipAddr: /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/,
+        header: /^(.+): ((.|\r\n\s)+)\r\n/mg,
     },
     extractEmail: function(text) {
         var email = text.match(utility.regexes.email);
